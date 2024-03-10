@@ -1,0 +1,36 @@
+# Xcode build output
+build/
+DerivedData/
+
+# Xcode user-specific files
+*.xcuserstate
+xcuserdata/
+*.xcscmblueprint
+*.xccheckout
+
+# Swift Package Manager
+.build/
+Package.resolved
+*.swiftpm/
+
+# Generated files
+*.generated.swift
+*.generated.objc
+
+# Distribution artifacts
+*.ipa
+*.dSYM.zip
+*.dSYM
+
+# Apple Double files
+._*
+
+# Thumbnails
+.Thumbs.db
+
+# macOS-specific
+.DS_Store
+
+# User settings
+*.moved-aside
+.idea/
