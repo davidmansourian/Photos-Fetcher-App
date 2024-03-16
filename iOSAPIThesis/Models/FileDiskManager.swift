@@ -20,7 +20,7 @@ struct FileDiskManager {
             try data.write(to: fileUrl, options: [.atomic, .completeFileProtection])
             return fileUrl
         } catch {
-            print("Failed writing to directory \(directory.name): \(error.localizedDescription)")
+            print("Failed writing to directory '\(directory.name)': \(error.localizedDescription)")
             return nil
         }
     }
