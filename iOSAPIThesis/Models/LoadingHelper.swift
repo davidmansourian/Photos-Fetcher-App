@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-// The images fetched are always the same, hence why I am using file manager to store and load from disk.
+// The images fetched are always the same (unless the list of url received from the endpoint changes), hence why I am using file manager to store and load from disk.
 
 @Observable
 final class LoadingHelper {
