@@ -37,8 +37,9 @@ final class LoadingHelper {
         
         Task { [weak self] in
             guard let self = self else { return }
+            
             do {
-                let photosList = try await apiService.fetchPhotosList(from: urlString)
+                let photosList = try await self.apiService.fetchPhotosList(from: urlString)
                 await self.createAppPhotosDirectoryIfNeeded()
                 await self.loadPhotos(from: photosList)
                 await self.updateUserState()
