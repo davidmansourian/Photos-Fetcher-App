@@ -102,11 +102,11 @@ final class LoadingHelper {
         
         return resizedImage
     }
-
+    
     @MainActor
     private func updateUserState() {
+        assert(Thread.isMainThread)
         if let photos = self.photos {
-            print(Thread.current)
             viewState = .loaded(photos)
         } else {
             viewState = .error("Couldn't load photos")

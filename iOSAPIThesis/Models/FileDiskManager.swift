@@ -9,7 +9,7 @@ import Foundation
 
 struct FileDiskManager {
     private let manager = FileManager.default
-
+    
     public func writeData(_ data: Data, in directory: Directory, fileName: String) -> URL? {
         let documentsUrl = URL.documentsDirectory
         let customFolderUrl = documentsUrl.appending(path: directory.name)
@@ -41,10 +41,10 @@ struct FileDiskManager {
             do {
                 try manager.createDirectory(at: customFolderUrl, withIntermediateDirectories: false)
             } catch {
-                print("Error when creating directory: \(error.localizedDescription)")
+                print("Error when creating directory '\(directory.name)': \(error.localizedDescription)")
             }
         } else {
-            print("Directory \(directory.name) already exists. Skipping creation.")
+            print("Directory '\(directory.name)' already exists. Skipping creation.")
         }
     }
     

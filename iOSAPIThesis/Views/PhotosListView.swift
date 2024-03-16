@@ -27,16 +27,16 @@ struct PhotosListView: View {
             ScrollView {
                 LazyVGrid(columns: columns) {
                     ForEach(photos, id: \.self) { photo in
-                            Image(uiImage: photo)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: imageWidthInGrid, height: imageHeightInGrid)
-                                .clipShape(RoundedRectangle(cornerRadius: 15))
+                        Image(uiImage: photo)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: imageWidthInGrid, height: imageHeightInGrid)
+                            .clipShape(RoundedRectangle(cornerRadius: 15))
                     }
                 }
             }
         case .error(let errorString):
-            ContentUnavailableView("Couldn't load photos", 
+            ContentUnavailableView("Couldn't load photos",
                                    systemImage: "exclamationmark.bubble.fill",
                                    description: Text(errorString)
             )
