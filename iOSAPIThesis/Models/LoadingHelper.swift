@@ -79,12 +79,12 @@ final class LoadingHelper {
     }
     
     private func fetchAndSavePhotoIfNeeded(for photo: Photo) async -> URL? {
-        if let localPhotoUrl = self.fileDiskManager.getFileURL(from: .appPhotos, for: photo.downloadUrl) {
+        if let localPhotoUrl = fileDiskManager.getFileURL(from: .appPhotos, for: photo.downloadUrl) {
             return localPhotoUrl
         }
         
-        guard let imageData = try? await self.apiService.fetchPhoto(from: photo.downloadUrl),
-              let savedPhotoUrl = self.fileDiskManager.writeData(imageData, in: .appPhotos, fileName: photo.downloadUrl)
+        guard let imageData = try? await apiService.fetchPhoto(from: photo.downloadUrl),
+              let savedPhotoUrl = fileDiskManager.writeData(imageData, in: .appPhotos, fileName: photo.downloadUrl)
         else {
             print("Error fetching individual photo")
             return nil
