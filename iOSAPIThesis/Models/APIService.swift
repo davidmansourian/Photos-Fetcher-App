@@ -9,11 +9,11 @@ import Foundation
 
 struct APIService {
     public func fetchPhotosList(from endpoint: String) async throws -> [Photo] {
-        return try await fetchData(as: [Photo].self, from: endpoint)
+        try await fetchData(as: [Photo].self, from: endpoint)
     }
     
     public func fetchPhoto(from endpoint: String) async throws -> Data {
-        return try await fetchData(as: Data.self, from: endpoint)
+        try await fetchData(as: Data.self, from: endpoint)
     }
 }
 
