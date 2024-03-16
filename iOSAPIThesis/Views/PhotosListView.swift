@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PhotosListView: View {
     private let imageHeightInGrid: CGFloat = 200
+    private let imageWidthInGrid: CGFloat = 175
     
     let loadingHelper = LoadingHelper(apiService: APIService(), fileDiskManager: FileDiskManager())
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
@@ -25,17 +26,12 @@ struct PhotosListView: View {
         case .loaded(let photos):
             ScrollView {
                 LazyVGrid(columns: columns) {
-                    ForEach(photos) { photo in
-                        if let localImageUrl = photo.localImageUrl,
-                           let image = compressedImage(uiImage: UIImage(contentsOfFile: localImageUrl.path()),
-                                                         imageHeight: imageHeightInGrid)
-                        {
-                            Image(uiImage: image)
+                    ForEach(photos, id: \.self) { photo in
+                            Image(uiImage: photo)
                                 .resizable()
                                 .scaledToFill()
-                                .frame(width: 175, height: imageHeightInGrid)
+                                .frame(width: imageWidthInGrid, height: imageHeightInGrid)
                                 .clipShape(RoundedRectangle(cornerRadius: 15))
-                        }
                     }
                 }
             }
@@ -44,29 +40,6 @@ struct PhotosListView: View {
                                    systemImage: "exclamationmark.bubble.fill",
                                    description: Text(errorString)
             )
-        }
-    }
-}
-
-extension PhotosListView {
-    func compressedImage(uiImage: UIImage?, imageHeight: CGFloat) -> UIImage? {
-        guard let image = uiImage else { return nil }
-        let resizedImage = image.aspectFittedToHeight(imageHeight)
-        resizedImage.jpegData(compressionQuality: 0.1)
-        
-        return resizedImage
-    }
-}
-
-extension UIImage {
-    func aspectFittedToHeight(_ newHeight: CGFloat) -> UIImage {
-        let scale = newHeight / self.size.height
-        let newWidth = self.size.width * scale
-        let newSize = CGSize(width: newWidth, height: newHeight)
-        let renderer = UIGraphicsImageRenderer(size: newSize)
-
-        return renderer.image { _ in
-            self.draw(in: CGRect(origin: .zero, size: newSize))
         }
     }
 }

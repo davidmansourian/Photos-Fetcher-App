@@ -6,13 +6,17 @@
 //
 
 import Foundation
+import SwiftUI
+
+// The images fetched are always the same, hence why I am using file manager to store and load from disk.
 
 @Observable
 final class LoadingHelper {
     private let apiService: APIService
     private let fileDiskManager: FileDiskManager
+    private let photoThumbnailHeight: CGFloat = 200
     
-    private var photos: [Photo]?
+    private var photos: [UIImage]?
     
     private(set) var viewState: ViewState = .idle
     
@@ -20,10 +24,10 @@ final class LoadingHelper {
         self.apiService = apiService
         self.fileDiskManager = fileDiskManager
         
-        loadPhotosList()
+        loadContent()
     }
     
-    private func loadPhotosList() {
+    private func loadContent() {
         viewState = .loading
         
         let urlString = "https://picsum.photos/v2/list"
@@ -40,51 +44,65 @@ final class LoadingHelper {
             }
         }
     }
-        
-    private func loadPhotos(from photosList: [Photo]) async {
-        let photos = await withTaskGroup(of: (Photo?, URL?).self, returning: [Photo].self) { [weak self] taskGroup in
-            guard let self = self else { return [] }
-            
-            for photo in photosList {
-                taskGroup.addTask {
-                    if let localImageUrl = self.fileDiskManager.getFileURL(from: .appPhotos, for: photo.downloadUrl) {
-                        return (photo, localImageUrl)
-                    }
-
-                    guard let imageData = try? await self.apiService.fetchPhoto(from: photo.downloadUrl),
-                          let savedImageUrl = self.fileDiskManager.writeData(imageData, in: .appPhotos, fileName: photo.downloadUrl)
-                    else {
-                        print("Error fetching individual image")
-                        return (nil, nil)
-                    }
-
-                    return (photo, savedImageUrl)
-                }
-            }
-            
-            var newPhotos: [Photo] = []
-            
-            for await (photoObject, localUrl) in taskGroup {
-                if let photo = photoObject,
-                   let url = localUrl {
-                    let newPhoto = Photo(id: photo.id, downloadUrl: photo.downloadUrl, localImageUrl: url)
-                    newPhotos.append(newPhoto)
-                }
-            }
-            
-            return newPhotos
-        }
-        
-        self.photos = photos
-    }
     
     private func createAppPhotosDirectoryIfNeeded() async {
         fileDiskManager.createDirectoryIfNeeded(.appPhotos)
     }
     
+    private func loadPhotos(from photosList: [Photo]) async {
+        let photos = await withTaskGroup(of: URL?.self, returning: [UIImage]?.self) { [weak self] taskGroup in
+            guard let self = self else { return nil }
+            
+            for photo in photosList {
+                taskGroup.addTask {
+                    await self.fetchAndSavePhotoIfNeeded(for: photo)
+                }
+            }
+            
+            var thumbnails: [UIImage] = []
+            
+            for await localPhotoUrl in taskGroup {
+                if let thumbnail = thumbnailFromLocalPhotoUrl(localPhotoUrl) {
+                    thumbnails.append(thumbnail)
+                }
+            }
+            
+            return thumbnails
+        }
+        
+        self.photos = photos
+    }
+    
+    private func fetchAndSavePhotoIfNeeded(for photo: Photo) async -> URL? {
+        if let localPhotoUrl = self.fileDiskManager.getFileURL(from: .appPhotos, for: photo.downloadUrl) {
+            return localPhotoUrl
+        }
+        
+        guard let imageData = try? await self.apiService.fetchPhoto(from: photo.downloadUrl),
+              let savedPhotoUrl = self.fileDiskManager.writeData(imageData, in: .appPhotos, fileName: photo.downloadUrl)
+        else {
+            print("Error fetching individual photo")
+            return nil
+        }
+        
+        return savedPhotoUrl
+    }
+    
+    private func thumbnailFromLocalPhotoUrl(_ localPhotoUrl: URL?) -> UIImage? {
+        guard let url = localPhotoUrl,
+              let localImage = UIImage(contentsOfFile: url.path()) else {
+            return nil
+        }
+        
+        let resizedImage = localImage.aspectFittedToHeight(photoThumbnailHeight)
+        resizedImage.jpegData(compressionQuality: 0.1)
+        
+        return resizedImage
+    }
+
     @MainActor
     private func updateUserState() {
-        if let photos = self.photos, !photos.isEmpty {
+        if let photos = self.photos {
             print(Thread.current)
             viewState = .loaded(photos)
         } else {
@@ -96,7 +114,20 @@ final class LoadingHelper {
 extension LoadingHelper {
     enum ViewState: Equatable {
         case idle, loading
-        case loaded([Photo])
+        case loaded([UIImage])
         case error(String)
+    }
+}
+
+extension UIImage {
+    func aspectFittedToHeight(_ newHeight: CGFloat) -> UIImage {
+        let scale = newHeight / self.size.height
+        let newWidth = self.size.width * scale
+        let newSize = CGSize(width: newWidth, height: newHeight)
+        let renderer = UIGraphicsImageRenderer(size: newSize)
+        
+        return renderer.image { _ in
+            self.draw(in: CGRect(origin: .zero, size: newSize))
+        }
     }
 }

@@ -7,14 +7,10 @@
 
 import Foundation
 
-struct Photo: Decodable, Equatable, Identifiable {
-    let id: String
+struct Photo: Decodable {
     let downloadUrl: String
-    let localImageUrl: URL?
     
     enum CodingKeys: String, CodingKey {
-        case id
         case downloadUrl = "download_url"
-        case localImageUrl
     }
 }
