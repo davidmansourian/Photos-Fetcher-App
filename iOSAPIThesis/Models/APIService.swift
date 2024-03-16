@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class APIService {
+struct APIService {
     public func fetchPhotosList(from endpoint: String) async throws -> [Photo] {
         return try await fetchData(as: [Photo].self, from: endpoint)
     }

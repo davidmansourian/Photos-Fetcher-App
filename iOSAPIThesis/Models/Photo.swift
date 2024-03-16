@@ -9,16 +9,12 @@ import Foundation
 
 struct Photo: Decodable, Equatable, Identifiable {
     let id: String
-    let author: String
-    let width: Int
-    let height: Int
     let downloadUrl: String
-    let imageData: Data?
+    let localImageUrl: URL?
     
     enum CodingKeys: String, CodingKey {
-        case id, author
-        case width, height
-        case imageData
+        case id
         case downloadUrl = "download_url"
+        case localImageUrl
     }
 }
