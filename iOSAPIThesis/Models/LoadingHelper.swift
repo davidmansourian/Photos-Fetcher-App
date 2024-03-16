@@ -9,6 +9,9 @@ import Foundation
 import SwiftUI
 
 // The images fetched are always the same (unless the list of url received from the endpoint changes), hence why I am using file manager to store and load from disk.
+// Saving images to disk and loading from there before generating thumbnails saves approximately 40 MB of in app-memory. Relatively almost 50%
+// The total size of the stored image data on disk is approx 22 MB. User would save approx 22 MB of data everytime they open the app.
+// Whether the increased code complexity of the file manager is worth it would be interesting to discuss.
 
 @Observable
 final class LoadingHelper {
