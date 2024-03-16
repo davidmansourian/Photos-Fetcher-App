@@ -117,7 +117,7 @@ final class LoadingHelper {
 }
 
 extension LoadingHelper {
-    enum ViewState: Equatable {
+    enum ViewState {
         case idle, loading
         case loaded([UIImage])
         case error(String)
