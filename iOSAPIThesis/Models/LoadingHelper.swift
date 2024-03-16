@@ -35,12 +35,13 @@ final class LoadingHelper {
         
         let urlString = "https://picsum.photos/v2/list"
         
-        Task {
+        Task { [weak self] in
+            guard let self = self else { return }
             do {
                 let photosList = try await apiService.fetchPhotosList(from: urlString)
-                await createAppPhotosDirectoryIfNeeded()
-                await loadPhotos(from: photosList)
-                await updateUserState()
+                await self.createAppPhotosDirectoryIfNeeded()
+                await self.loadPhotos(from: photosList)
+                await self.updateUserState()
             } catch {
                 let errorMessage = (error as? APIService.APIError)?.customDescription ?? error.localizedDescription
                 self.viewState = .error(errorMessage)
