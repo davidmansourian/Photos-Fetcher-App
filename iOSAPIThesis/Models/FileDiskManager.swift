@@ -11,35 +11,35 @@ struct FileDiskManager {
     private let manager = FileManager.default
 
     public func writeData(_ data: Data, in directory: Directory, fileName: String) -> URL? {
-        let documentsURL = URL.documentsDirectory
-        let customFolderURL = documentsURL.appending(path: directory.name)
+        let documentsUrl = URL.documentsDirectory
+        let customFolderUrl = documentsUrl.appending(path: directory.name)
         
-        let fileURL = customFolderURL.appending(path: sanitzedFileName(fileName))
+        let fileUrl = customFolderUrl.appending(path: sanitzedFileName(fileName))
         
         do {
-            try data.write(to: fileURL, options: [.atomic, .completeFileProtection])
-            return fileURL
+            try data.write(to: fileUrl, options: [.atomic, .completeFileProtection])
+            return fileUrl
         } catch {
             print("Failed writing to directory \(directory.name): \(error.localizedDescription)")
             return nil
         }
     }
     
-    public func getFileURL(from path: Directory, for fileName: String) -> URL? {
-        let documentsURL = URL.documentsDirectory
-        let customFolderURL = documentsURL.appending(path: path.name)
-        let fileURL = customFolderURL.appending(path: sanitzedFileName(fileName))
+    public func getFileURL(from directory: Directory, for fileName: String) -> URL? {
+        let documentsUrl = URL.documentsDirectory
+        let customFolderUrl = documentsUrl.appending(path: directory.name)
+        let fileUrl = customFolderUrl.appending(path: sanitzedFileName(fileName))
         
-        return manager.fileExists(atPath: fileURL.path()) ? fileURL : nil
+        return manager.fileExists(atPath: fileUrl.path()) ? fileUrl : nil
     }
     
     public func createDirectoryIfNeeded(_ directory: Directory) {
-        let documentsURL = URL.documentsDirectory
-        let customFolderURL = documentsURL.appending(path: directory.name)
+        let documentsUrl = URL.documentsDirectory
+        let customFolderUrl = documentsUrl.appending(path: directory.name)
         
-        if !manager.fileExists(atPath: customFolderURL.path()) {
+        if !manager.fileExists(atPath: customFolderUrl.path()) {
             do {
-                try manager.createDirectory(at: customFolderURL, withIntermediateDirectories: false)
+                try manager.createDirectory(at: customFolderUrl, withIntermediateDirectories: false)
             } catch {
                 print("Error when creating directory: \(error.localizedDescription)")
             }
