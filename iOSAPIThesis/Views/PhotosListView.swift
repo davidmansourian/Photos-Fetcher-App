@@ -11,11 +11,11 @@ struct PhotosListView: View {
     private let imageHeightInGrid: CGFloat = 200
     private let imageWidthInGrid: CGFloat = 175
     
-    let loadingHelper = LoadingHelper(apiService: APIService(), fileDiskManager: FileDiskManager())
+    let loadingHelper = PhotosLoader(apiService: APIService(), fileDiskManager: FileDiskManager())
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     
     var body: some View {
-        switch loadingHelper.viewState {
+        switch loadingHelper.state {
         case .idle:
             Text("Waiting for loader")
         case .loading:

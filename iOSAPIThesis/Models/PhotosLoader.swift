@@ -14,14 +14,14 @@ import SwiftUI
 // Whether the increased code complexity of the file manager is worth it would be interesting to discuss.
 
 @Observable
-final class LoadingHelper {
+final class PhotosLoader {
     private let apiService: APIService
     private let fileDiskManager: FileDiskManager
     private let photoThumbnailHeight: CGFloat = 200
     
     private var photos: [UIImage]?
     
-    private(set) var viewState: ViewState = .idle
+    private(set) var state: State = .idle
     
     init(apiService: APIService, fileDiskManager: FileDiskManager) {
         self.apiService = apiService
@@ -31,7 +31,7 @@ final class LoadingHelper {
     }
     
     private func loadContent() {
-        viewState = .loading
+        state = .loading
         
         let urlString = "https://picsum.photos/v2/list"
         
@@ -44,8 +44,7 @@ final class LoadingHelper {
                 await self.loadPhotos(from: photosList)
                 await self.updateUserState()
             } catch {
-                let errorMessage = (error as? APIService.APIError)?.customDescription ?? error.localizedDescription
-                self.viewState = .error(errorMessage)
+                self.state = .error(error.localizedDescription)
             }
         }
     }
@@ -84,7 +83,7 @@ final class LoadingHelper {
         }
         
         guard let imageData = try? await apiService.fetchPhoto(from: photo.downloadUrl),
-              let savedPhotoUrl = fileDiskManager.writeData(imageData, in: .appPhotos, fileName: photo.downloadUrl)
+              let savedPhotoUrl = fileDiskManager.write(imageData, in: .appPhotos, fileName: photo.downloadUrl)
         else {
             print("Error fetching individual photo")
             return nil
@@ -109,15 +108,15 @@ final class LoadingHelper {
     private func updateUserState() {
         assert(Thread.isMainThread)
         if let photos = self.photos {
-            viewState = .loaded(photos)
+            state = .loaded(photos)
         } else {
-            viewState = .error("Couldn't load photos")
+            state = .error("Couldn't load photos")
         }
     }
 }
 
-extension LoadingHelper {
-    enum ViewState {
+extension PhotosLoader {
+    enum State {
         case idle, loading
         case loaded([UIImage])
         case error(String)

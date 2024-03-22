@@ -10,7 +10,7 @@ import Foundation
 struct FileDiskManager {
     private let manager = FileManager.default
     
-    public func writeData(_ data: Data, in directory: Directory, fileName: String) -> URL? {
+    public func write(_ data: Data, in directory: Directory, fileName: String) -> URL? {
         let documentsUrl = URL.documentsDirectory
         let customFolderUrl = documentsUrl.appending(path: directory.name)
         

@@ -13,7 +13,7 @@
 		DB6AFB0E2B9396CB00A65CE4 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB6AFB0D2B9396CB00A65CE4 /* Preview Assets.xcassets */; };
 		DB6AFB172B9396E800A65CE4 /* Photo.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6AFB162B9396E800A65CE4 /* Photo.swift */; };
 		DB6AFB192B93977A00A65CE4 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6AFB182B93977A00A65CE4 /* APIService.swift */; };
-		DB6AFB1B2B939D7800A65CE4 /* LoadingHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6AFB1A2B939D7800A65CE4 /* LoadingHelper.swift */; };
+		DB6AFB1B2B939D7800A65CE4 /* PhotosLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB6AFB1A2B939D7800A65CE4 /* PhotosLoader.swift */; };
 		DB8AB1372BA5810700959823 /* FileDiskManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8AB1362BA5810700959823 /* FileDiskManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,7 +25,7 @@
 		DB6AFB0D2B9396CB00A65CE4 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		DB6AFB162B9396E800A65CE4 /* Photo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Photo.swift; sourceTree = "<group>"; };
 		DB6AFB182B93977A00A65CE4 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
-		DB6AFB1A2B939D7800A65CE4 /* LoadingHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingHelper.swift; sourceTree = "<group>"; };
+		DB6AFB1A2B939D7800A65CE4 /* PhotosLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosLoader.swift; sourceTree = "<group>"; };
 		DB8AB1362BA5810700959823 /* FileDiskManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileDiskManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -82,7 +82,7 @@
 				DB6AFB162B9396E800A65CE4 /* Photo.swift */,
 				DB6AFB182B93977A00A65CE4 /* APIService.swift */,
 				DB8AB1362BA5810700959823 /* FileDiskManager.swift */,
-				DB6AFB1A2B939D7800A65CE4 /* LoadingHelper.swift */,
+				DB6AFB1A2B939D7800A65CE4 /* PhotosLoader.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -165,7 +165,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB6AFB1B2B939D7800A65CE4 /* LoadingHelper.swift in Sources */,
+				DB6AFB1B2B939D7800A65CE4 /* PhotosLoader.swift in Sources */,
 				DB6AFB172B9396E800A65CE4 /* Photo.swift in Sources */,
 				DB8AB1372BA5810700959823 /* FileDiskManager.swift in Sources */,
 				DB6AFB092B9396C900A65CE4 /* PhotosListView.swift in Sources */,

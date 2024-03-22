@@ -9,16 +9,16 @@ import Foundation
 
 struct APIService {
     public func fetchPhotosList(from endpoint: String) async throws -> [Photo] {
-        try await fetchData(as: [Photo].self, from: endpoint)
+        try await fetch(as: [Photo].self, from: endpoint)
     }
     
     public func fetchPhoto(from endpoint: String) async throws -> Data {
-        try await fetchData(as: Data.self, from: endpoint)
+        try await fetch(as: Data.self, from: endpoint)
     }
 }
 
 extension APIService {
-    private func fetchData<T: Decodable>(as type: T.Type, from endpoint: String) async throws -> T {
+    private func fetch<T: Decodable>(as type: T.Type, from endpoint: String) async throws -> T {
         guard let url = URL(string: endpoint) else { throw APIError.badURL }
         
         do {
@@ -26,9 +26,13 @@ extension APIService {
             
             try validateResponse(response)
             
-            guard let validatedData = try validateData(for: type, from: data) else { throw APIError.invalidData }
+            if type != Data.self {
+                return try JSONDecoder().decode(type, from: data)
+            }
             
-            return validatedData
+            guard let rawData = data as? T else { throw APIError.invalidData("Unknown data") }
+            
+            return rawData
         } catch {
             throw error
         }
@@ -43,33 +47,22 @@ extension APIService {
             throw APIError.invalidStatusCode(httpResponse.statusCode)
         }
     }
-    
-    private func validateData<T: Decodable>(for type: T.Type, from data: Data) throws -> T? {
-        if type == [Photo].self {
-            do {
-                return try JSONDecoder().decode(type, from: data)
-            } catch {
-                throw APIError.invalidData
-            }
-        } else {
-            return data as? T
-        }
-    }
 }
 
 extension APIService {
-    enum APIError: Error {
-        case badURL, badServerResponse, invalidData
+    enum APIError: LocalizedError {
+        case badURL, badServerResponse
         case invalidStatusCode(Int)
+        case invalidData(String)
         
-        public var customDescription: String {
+        public var errorDescription: String? {
             switch self {
             case .badURL:
                 return "Bad URL."
             case .badServerResponse:
                 return "Bad server response."
-            case .invalidData:
-                return "Couldn't validate data."
+            case .invalidData(let error):
+                return "Couldn't validate data: \(error)"
             case .invalidStatusCode(let statusCode):
                 return "Invalid status code: \(statusCode)."
             }
