@@ -61,13 +61,13 @@ final class PhotosLoader {
         }
     }
     
-    // MARK: Line-per-line description
+    // MARK: Function description
     /// - Calls fileDiskManager to create the 'appPhotos' directory in the internal storage if needed
     private func createAppPhotosDirectoryIfNeeded() async {
         fileDiskManager.createDirectoryIfNeeded(.appPhotos)
     }
     
-    // MARK: Line-per-line description
+    // MARK: Function description
     /// - Create a task group
     /// - Make sure that 'self' is available (that instance should exist)
     /// - Loop through 'photosList' from argument in function
@@ -103,7 +103,7 @@ final class PhotosLoader {
     }
     
     
-    // MARK: Line-per-line description
+    // MARK: Function description
     /// - Check if the photo is saved in internal storage
     /// - If the photo is saved in internal storage, return the internal storage URL
     /// - If the photo is not saved in internal storage, try to fetch it by using the apiService
@@ -125,7 +125,7 @@ final class PhotosLoader {
         return savedPhotoUrl
     }
     
-    // MARK: Line-per-line description
+    // MARK: Function description
     /// - Check so that inserted URL in the function is an URL
     /// - and check so that the image exists locally using the local URL, otherwise return nil
     /// - Resize the image by calling 'aspectFittedToHeight'. The height is determined by the class variable 'photoThumbnailHeight'
@@ -143,10 +143,10 @@ final class PhotosLoader {
         return resizedImage
     }
     
-    // MARK: Line-per-line description
+    // MARK: Function description
     /// - Make sure that the function is executed on the main thread
     /// - If the class variable 'photos' is not nil, set the state to .loaded with an associated value of the photos
-    /// - Otherwise, set the state to .error with an associated value of the error description
+//    / - Otherwise, set the state to .error with an associated value of the error description
     @MainActor
     private func updateUserState() {
         assert(Thread.isMainThread)
